@@ -2138,7 +2138,7 @@ figure3.fun <- function(list.datasets,parameters,print = F,nameFile=NA,wd_figure
                         convert.to.day.CY=F,total.yield=F,Rcw.kg.ha=F,
                         var.goal = NA,show.var.goal=F,legend.box = F,
                         legend.position = "topright",pch.diff = F,
-                        plot.lines=T){y.max.H.U
+                        plot.lines=T){
   
   Tw <- parameters$Tw
   ta <- parameters$theta_a

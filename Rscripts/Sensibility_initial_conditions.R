@@ -3,6 +3,12 @@
 # The goal of the script is to conduct the model sensitivity analysis to initial 
 # conditions.
 
+# Figure produced:
+# Figure.Sensitivity_initial_conditions.jpeg
+
+# File produced:
+# data_raw/SensitivityInitialConditionsData.rds
+
 wd <- getwd()
 wd_data <- paste(wd,"data",sep="/") 
 wd_data_raw <- paste(wd,"data_raw",sep="/") 
@@ -13,16 +19,19 @@ library(deSolve)
 
 source(file = paste(wd_Rscripts,"Functions.R",sep = "/"))
 
+print.fig <- F
+
 # Import parameters values:
 fileName <- "/parameters.initial.dist.51.13.RData"
 parameters <- readRDS(file = paste(wd_data_raw,fileName,sep="/"))
 
-# Scenario: this is the same asfor the global sensivity analysis, i.e., the
-# "Calibration" = "Resource discontinuity" scenario in the paper.
+# Scenario: this is the same as for the global sensitivity analysis, i.e., the
+# "Calibration" = "Resource discontinuity" scenario in the paper, but we stop
+# before the resources become unavailable.
 parameters$Tw <- treatments.Tw$calibration
 
 nb.days <- 23
-t <- seq(0.01,nb.days*12, by = 0.01) # in h
+t <- seq(0,nb.days*12, by = 0.01) # in h
 
 # the initial state:
 states_df <- t(as.data.frame(state))
@@ -76,50 +85,118 @@ for(var in names(changes_l)){
 
 # saveRDS(outputs_l,paste0(wd_data_raw,"/SensitivityInitialConditionsData.rds"))
 outputs_l <- readRDS(paste0(wd_data_raw,"/SensitivityInitialConditionsData.rds"))
-# Bruno is here
+
+x_time <- outputs_l$BaseLine$`0`$time
+y_totBees <- rowSums(outputs_l$BaseLine$`0`[,c("Wn","S","Hc","Hw","Uc","Uw")])
+
+Ymax_var <- c(100,15,50)
+Ymax_totBees <- 70
+lwd_lines <- 2
+
+Y_labs <- c("Number of broods (B)","Amount of nest resources (Rnw, g)","Number of workers in the nest (Wn)")
+col_lines <- c("bisque4","darkgoldenrod3","grey50")
+names(Y_labs) <- names(col_lines) <- names(Ymax_var) <- c("B","Rnw","Wn")
+
+percent_change <- as.character(c(-100,-50,50,100))
+lty_lines <- c(3,4,2,5)
+names(lty_lines) <- as.character(percent_change)
+
+var_order <- c("B","Wn","Rnw") # so the order can be changed easily
+plotResourcesPoly <- F
 
 
+coeff <- 1.2
+if(print.fig){
+  jpeg(filename = paste0(wd_figures,"/Figure.Sensitivity_initial_conditions.jpeg"),
+       width = 22*coeff, height = 20*coeff, units = "cm", res = 250)
+}
+layout(matrix(1:9, nrow = 3, byrow = T), heights = c(1,1,1.2))
+for(var_i in 1:length(var_order)){
+  # var_i <- 1
+  varHere <- var_order[var_i]
+  outputs_l_here <- outputs_l[[varHere]]
+  y_baseLine <- outputs_l$BaseLine$`0`[,varHere]
+  
+  # *** plot the variable whose initial value is changed ***
+  side1 <- 0.5
+  xaxt <- "n"
+  if(var_i == 3){
+    side1 <- 4.5
+    xaxt <- "s"
+  }
+  par(mar = c(side1,5,0.5,0.5))
+  plot(0,0, las = 1, col= "white", xlim = c(0,23), ylim = c(0,Ymax_var[varHere]), 
+       xlab = "", ylab = "",xaxt=xaxt)
+  if(var_i == 3){
+    mtext("Time (days)",side = 1, line = 2.5)
+  }
+  mtext(Y_labs[varHere],side = 2, line = 3)
+  
+  if(plotResourcesPoly){
+    # plot resources availability
+    polygon(x = c(0,23,23,0), y = c(0,0,Ymax_var[varHere],Ymax_var[varHere]),border = F,
+            col = add.transparency.colour("blueviolet",alpha = 0.20))
+    polygon(x =c(0,23,23,0), y = c(0,0,Ymax_var[varHere],Ymax_var[varHere]),
+            density = 5,lwd=1.5,col = "black")
+  }
+  # plot the base line for that variable
+  lines(x = x_time, y = y_baseLine, lwd = lwd_lines, col = col_lines[varHere], lty = 1)
+  # plot the lines for the different inital conditions
+  for(percent_i in 1:length(percent_change)){
+    percent_changeHere <- as.character(percent_change[percent_i])
+    lty_linesHere <- lty_lines[percent_changeHere]
+    y <- outputs_l_here[[percent_changeHere]][,varHere]
+    lines(x = x_time, y = y, lwd = lwd_lines, col = col_lines[varHere], lty = lty_linesHere)
+  }
+  # legend
+  if(var_i == 1){
+    legend("bottomright",c("base line","-100%","-50%","+50%","+100%"),lty = c(1,lty_lines),
+           bty = "n", lwd = 1.5)
+  }
+  
+  # *** plot the corresponding total number of bees ***
+  plot(0,0, las = 1, col= "white", xlim = c(0,23), ylim = c(0,Ymax_totBees), 
+       xlab = "", ylab = "",xaxt=xaxt)
+  if(var_i == 3){
+    mtext("Time (days)",side = 1, line = 2.5)
+  }
+  mtext("Total nb. of adult bees",side = 2, line = 3)
+  #
+  if(plotResourcesPoly){
+    # plot resources availability
+    polygon(x = c(0,23,23,0), y = c(0,0,Ymax_var[varHere],Ymax_totBees),border = F,
+            col = add.transparency.colour("blueviolet",alpha = 0.20))
+    polygon(x =c(0,23,23,0), y = c(0,0,Ymax_var[varHere],Ymax_totBees),
+            density = 5,lwd=1.5,col = "black")
+  }
+  # plot the base line total number workers
+  lines(x = x_time, y = y_totBees, lwd = lwd_lines, col = "black", lty = 1)
+  # plot the other lines
+  for(percent_i in 1:length(percent_change)){
+    percent_changeHere <- as.character(percent_change[percent_i])
+    lty_linesHere <- lty_lines[percent_changeHere]
+    y <- rowSums(outputs_l_here[[percent_changeHere]][,c("Wn","S","Hc","Hw","Uc","Uw")])
+    lines(x = x_time, y = y, lwd = lwd_lines, col = "black", lty = lty_linesHere)
+  }
+  
+  # *** now determine the % change in the total number of bees at 23 days ***
+  y_23_balseLine <- tail(y_totBees,1)
+  y_23s <- sapply(X = 1:length(percent_change), function(percent_i){
+    percent_changeHere <- as.character(percent_change[percent_i])
+    y <- rowSums(outputs_l_here[[percent_changeHere]][,c("Wn","S","Hc","Hw","Uc","Uw")])
+    y_23 <- tail(y,1)
+    percetn_diff <- (y_23_balseLine - y_23) / y_23_balseLine * 100 * -1
+  })
+  plot(x = as.numeric(percent_change), y = y_23s, ylim = range(as.numeric(percent_change)),
+       las = 1, xlab = "", ylab = "", pch = 16, cex = 3, xaxt = xaxt)
+  if(var_i == 3){
+    mtext("% change initial value",side = 1, line = 2.5)
+  }
+  mtext("% change bee nb. at day 23",side = 2, line = 3)
+  abline(a = 0,b = 1, lty = 2, lwd = 2)
+  abline(a = 0,b = 0, lty = 2, lwd = 2)
+}
+if(print.fig){
+ dev.off() 
+}
 
-
-
-
-# base line results:
-
-out.1 <- ode(y = state, times = t, func = ODE.m, parms = parameters)
-out.2 <- as.data.frame(out.1)
-out.2$CY <- crop.yield.fun(data.ts = out.2,parameters = parameters,convert.to.day = F,
-                           modif.tot.amount = T, plot.PS = F) # in g for the total area
-out.2[,1] <- out.2[,1] / 12 # conversion in days
-out.2 <- out.2[out.2[,1] %in% 0:90,]
-figure3.fun(out.2,parameters = parameters, print = print.fig, 
-            wd_figures = wd_figures, total.yield = T,plot.lines = T,
-            y.max.H.Wn = y.max.H.Wn, y.max.U.S = y.max.U.S, y.max.B = y.max.B, 
-            y.max.Rn = y.max.Rn, y.max.R = y.max.R, y.max.CY = y.max.CY,
-            var.goal = var.goal, show.var.goal = T,legend.box = T, # y.max.R = y.max.R,
-            nameFile = paste0("Figure.SensibilityInitalCond_",parameters$Tw,"_A=",parameters$A,".jpeg"))
-
-
-# 
-
-
-nb.days <- 23
-t <- seq(0.01,nb.days*12, by = 0.01) # in h
-
-out.1 <- ode(y = state, times = t, func = ODE.m, parms = parameters)
-out.2 <- as.data.frame(out.1)
-out.2$CY <- crop.yield.fun(data.ts = out.2,parameters = parameters,convert.to.day = F) # in g for the total area
-out.2[,1] <- out.2[,1] / 12 # conversion in days
-out.2 <- out.2[out.2[,1] %in% 0:90,]
-figure3.fun(out.2,parameters = parameters,y.max.R = NA, print = F, y.max.H.Wn = 40,
-            wd_figures = wd_figures)
-# 
-state_0 <- state
-state_0["Wn"] <- 0
-
-out.3 <- ode(y = state_0, times = t, func = ODE.m, parms = parameters)
-out.4 <- as.data.frame(out.3)
-out.4$CY <- crop.yield.fun(data.ts = out.4,parameters = parameters,convert.to.day = F) # in g for the total area
-out.4[,1] <- out.4[,1] / 12 # conversion in days
-out.4 <- out.4[out.4[,1] %in% 0:90,]
-figure3.fun(out.4,parameters = parameters,y.max.R = NA, print = F, y.max.H.Wn = 40,
-            wd_figures = wd_figures)

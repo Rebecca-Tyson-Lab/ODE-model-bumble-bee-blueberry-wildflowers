@@ -37,11 +37,11 @@ fileName <- "/parameters.initial.dist.51.13.RData"
 parameters <- readRDS(file = paste(wd_data_raw,fileName,sep="/"))
 
 # Scenario: this is the same as the "Calibration" = "Resource discontinuity" 
-# scenario in the paper.
+# scenario in the paper, but we stop before the resources become unavailable.
 parameters$Tw <- treatments.Tw$calibration # this 
 
 nb.days <- 23
-t <- seq(0.01,nb.days*12, by = 0.01) # in h
+t <- seq(0,nb.days*12, by = 0.01) # in h
 
 # determine the parameters to include in the GSA
 para.not.GSA <- c("Tw","A","n_f","w_f")
