@@ -39,7 +39,6 @@ parameters <- readRDS(file = paste(wd_data_raw,fileName,sep="/"))
 # Scenario: this is the same as the "Calibration" = "Resource discontinuity" 
 # scenario in the paper.
 parameters$Tw <- treatments.Tw$calibration # this 
-# names(parameters)[names(parameters) == "K_f"] <- "K_HSf"
 
 nb.days <- 23
 t <- seq(0.01,nb.days*12, by = 0.01) # in h

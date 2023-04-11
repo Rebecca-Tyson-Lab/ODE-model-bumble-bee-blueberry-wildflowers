@@ -2136,7 +2136,7 @@ figure3.fun <- function(list.datasets,parameters,print = F,nameFile=NA,wd_figure
                         y.max.H.Wn = NA, y.max.U.S = NA, y.max.B = NA,
                         y.max.R = NA, y.max.Rn = NA, y.max.CY = NA,lwd=3,
                         convert.to.day.CY=F,total.yield=F,Rcw.kg.ha=F,
-                        var.goal=NA,show.var.goal=F,legend.box = F,
+                        var.goal = NA,show.var.goal=F,legend.box = F,
                         legend.position = "topright",pch.diff = F,
                         plot.lines=T){y.max.H.U
   
