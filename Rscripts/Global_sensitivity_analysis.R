@@ -39,6 +39,7 @@ parameters <- readRDS(file = paste(wd_data_raw,fileName,sep="/"))
 # Scenario: this is the same as the "Calibration" = "Resource discontinuity" 
 # scenario in the paper, but we stop before the resources become unavailable.
 parameters$Tw <- treatments.Tw$calibration # this 
+parameters$A <- 600
 
 nb.days <- 23
 t <- seq(0,nb.days*12, by = 0.01) # in h

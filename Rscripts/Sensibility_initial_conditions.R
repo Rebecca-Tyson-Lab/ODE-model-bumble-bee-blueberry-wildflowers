@@ -19,7 +19,7 @@ library(deSolve)
 
 source(file = paste(wd_Rscripts,"Functions.R",sep = "/"))
 
-print.fig <- F
+print.fig <- T
 
 # Import parameters values:
 fileName <- "/parameters.initial.dist.51.13.RData"
@@ -29,6 +29,9 @@ parameters <- readRDS(file = paste(wd_data_raw,fileName,sep="/"))
 # "Calibration" = "Resource discontinuity" scenario in the paper, but we stop
 # before the resources become unavailable.
 parameters$Tw <- treatments.Tw$calibration
+parameters$A <- 600
+parameters$theta_a <- 0.1
+parameters$theta_q <- parameters$theta_h <- 2
 
 nb.days <- 23
 t <- seq(0,nb.days*12, by = 0.01) # in h
@@ -83,7 +86,7 @@ for(var in names(changes_l)){
   count <- count + 1
 }
 
-# saveRDS(outputs_l,paste0(wd_data_raw,"/SensitivityInitialConditionsData.rds"))
+saveRDS(outputs_l,paste0(wd_data_raw,"/SensitivityInitialConditionsData.rds"))
 outputs_l <- readRDS(paste0(wd_data_raw,"/SensitivityInitialConditionsData.rds"))
 
 x_time <- outputs_l$BaseLine$`0`$time
