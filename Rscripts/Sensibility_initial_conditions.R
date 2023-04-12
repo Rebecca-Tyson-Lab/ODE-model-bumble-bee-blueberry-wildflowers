@@ -19,7 +19,7 @@ library(deSolve)
 
 source(file = paste(wd_Rscripts,"Functions.R",sep = "/"))
 
-print.fig <- T
+print.fig <- F
 
 # Import parameters values:
 fileName <- "/parameters.initial.dist.51.13.RData"
@@ -188,7 +188,8 @@ for(var_i in 1:length(var_order)){
     percent_changeHere <- as.character(percent_change[percent_i])
     y <- rowSums(outputs_l_here[[percent_changeHere]][,c("Wn","S","Hc","Hw","Uc","Uw")])
     y_23 <- tail(y,1)
-    percetn_diff <- (y_23_balseLine - y_23) / y_23_balseLine * 100 * -1
+    percent_diff <- (y_23_balseLine - y_23) / y_23_balseLine * 100 * -1
+    return(percent_diff)
   })
   plot(x = as.numeric(percent_change), y = y_23s, ylim = range(as.numeric(percent_change)),
        las = 1, xlab = "", ylab = "", pch = 16, cex = 3, xaxt = xaxt)
@@ -198,8 +199,42 @@ for(var_i in 1:length(var_order)){
   mtext("% change bee nb. at day 23",side = 2, line = 3)
   abline(a = 0,b = 1, lty = 2, lwd = 2)
   abline(a = 0,b = 0, lty = 2, lwd = 2)
+  
+  # print the outputs
+  y_23_nb <- sapply(X = 1:length(percent_change), function(percent_i){
+    percent_changeHere <- as.character(percent_change[percent_i])
+    y <- rowSums(outputs_l_here[[percent_changeHere]][,c("Wn","S","Hc","Hw","Uc","Uw")])
+    y_23 <- tail(y,1)
+   return(y_23)
+  })
+  names(y_23s) <- names(y_23_nb) <- percent_change
+  print(varHere)
+  df_change <- as.data.frame(round(rbind(y_23s,y_23_nb),2))
+  rownames(df_change) <- c("%","nb")
+  print(df_change)
+  print(paste0("Base-line: ",round(y_23_balseLine,2)))
 }
 if(print.fig){
  dev.off() 
 }
+
+#  "B"
+#      -100    -50    50   100
+# %  -21.62 -10.77 10.74 21.46
+# nb  41.41  47.14 58.51 64.17
+#  "Base-line: 52.83"
+
+#  "Wn"
+#     -100   -50    50   100
+# %  -4.20 -2.08  2.05  4.07
+# nb 50.62 51.74 53.92 54.99
+#  "Base-line: 52.83"
+
+#  "Rnw"
+#      -100   -50    50   100
+# %  -27.87 -8.44  5.89 10.52
+# nb  38.11 48.38 55.95 58.40
+#  "Base-line: 52.83"
+
+
 
