@@ -27,7 +27,9 @@ par(mar=c(4.5,5,0.5,0.5))
 plot(0,0,xlim=c(0,6),ylim=c(0,1),col="white",las=1,xlab="",ylab="")
 mtext(bquote("Attractiveness" ~ theta[hq]~"="~(theta[h]+theta[q])/2),
       side = 1,line = 3)
-mtext(bquote("Preference for crop vs. wildflowers ("~theta[p]~")"),
+# mtext(bquote("Preference for crop vs. wildflowers ("~theta[p]~")"),
+#       side = 2,line = 3)
+mtext(bquote("Preference for crop vs. wildflowers ="~theta[p]*"("*theta[a]*","*theta[h]*","*theta[q]*")"),
       side = 2,line = 3)
 abline(a = 0.5, b = 0, lty =2, lwd = 2, col="gray")
 for(i in 1:length(theta_a)){
