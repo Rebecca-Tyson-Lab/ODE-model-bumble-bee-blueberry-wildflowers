@@ -1,3 +1,7 @@
+# Script related to Carturan et al. 2023. Bumble bee pollination and the 
+# wildflower/crop trade-off: When do wildflower enhancements improve crop yield?
+# Ecological Modelling
+
 # Author: Bruno S. Carturan
 
 # The goal of the script is to conduct the GSA produce the associated figure.
@@ -73,7 +77,7 @@ GSA <- ODE.LHS.PRCC.GSA.fun(ODE.m = ODE.m, t = t, state = state,
 # file produced:
 # GSA.LHS.PRCC.ODE.2022-05-28_17-46-32.51.13.RData
 
-# Figures results LHS-PRCC-----
+# Figures results LHS-PRCC (Figure 9) -----
 #
 name.file <- "GSA.LHS.PRCC.ODE.2022-05-28_17-46-32.51.13.RData"
 
@@ -165,5 +169,5 @@ if(print.fig){
   dev.off()
 }
 
-#
+# THE END
 

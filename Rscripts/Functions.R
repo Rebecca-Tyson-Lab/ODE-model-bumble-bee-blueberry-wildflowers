@@ -1,10 +1,14 @@
+# Script related to Carturan et al. 2023. Bumble bee pollination and the 
+# wildflower/crop trade-off: When do wildflower enhancements improve crop yield?
+# Ecological Modelling
+
 # Author: Bruno S. Carturan
 
 # The goal of the script is to provide the functions for the other R scripts.
 
 
-# Function that takes as argument a dataframe with the x, y and z variables as columns
-# and returns a matrix of z value in a x, y, z.
+# Function that takes as argument a data frame with the x, y and z variables as 
+# columns and returns a matrix of z value in a x, y, z.
 # ds <- ds.here
 # xvar.name <- "attractiveness"
 # yvar.name <- "theta_a"
@@ -45,7 +49,7 @@ matrixFromDataset.fun <- function(ds,xvar.name,yvar.name,zvar.name,
   return(output)
 }
 
-# function that takes a matrix of the response variable as provided by the model,
+# Function that takes a matrix of the response variable as provided by the model,
 # and returns a long format table.
 # data.matrix <- CY.m # the dataset of the response variable for each combinations of the explanatory variables, i.e., the one outputed by the model
 # data.matrix <- TotH.m
@@ -299,6 +303,7 @@ figure.4Var.contourLine.fun.old <- function(output,col.grad,reverseColGradient=F
 # Function that produces the results figures with the three explanatory variables 
 # (i.e., thata_a, attractiveness and Tw) and the response variable (i.e., crop 
 # yield or nb of individuals) and adds contour lines.
+
 # output <- output.experiment.l$A_600 # read.csv(paste(wd_data_raw,"output.experiment.1.csv",sep="/"),header = T)
 # output <- output.exp
 # col.grad = c("darkgoldenrod3","white","dodgerblue3") # col.grad <- "viridis"
@@ -397,16 +402,6 @@ figure.4Var.contourLine.fun <- function(output,col.grad,reverseColGradient=F,
   
   # 
   output$yield_kg.last.d <-  output$yield_kg.ha.last.d * para.A / 10000
-  
-  # # kg/ha --> kg
-  # if(total.yield){
-  #   total.yield.kg <- output$yield_kg.ha.last.d
-  #   # total.yield.kg <- total.yield.kg * (para.A * (1 - output$theta_a)) / 10000
-  #   output$yield_kg.ha.last.d <-  total.yield.kg * para.A / 10000
-  #   
-  #   # plot(output$yield_kg.ha.last.d ~ output$theta_a)
-  #   # plot(total.yield.kg ~ output$theta_a)
-  # }
   
   if(responseVariable == "cropYield"){
     if(total.yield){
@@ -849,7 +844,7 @@ figure.4Var.contourLine.fun <- function(output,col.grad,reverseColGradient=F,
   }
 }
 
-# function that transform number from one scale/range to another
+# Function that transform number from one scale/range to another
 # x1 <- c(5,20,50,100)
 # min2 <- 0.5
 # max2 <- 4
@@ -1079,7 +1074,7 @@ gbm.perspec.modif <- function(gbm.object, x = 1, y = 2, pred.means = NULL, x.lab
   }
 }
 
-# function taking a vector of colours names and return a vector of the same colours
+# Function taking a vector of colours names and return a vector of the same colours
 #but with more transparency added
 add.transparency.colour <- function(colours,alpha=0.35){
   col.rgb <- col2rgb(colours)
@@ -1825,7 +1820,7 @@ clean.data.fun <- function(file.data){
   return(output)
 }
 
-# Function that replace update the following values for Tw:
+# Function that replaces update the following values for Tw:
 # "April through June" --> "April through May"
 # "June" --> "no wildflowers"
 # "midMay through June" --> "2nd part of May"
@@ -1844,28 +1839,6 @@ update.Tw.fun <- function(data.all.l){
     data.all.l$datavar.m.L[[i]]$time.intervals[rows.to.change] <- "2nd part of May"
   }
   return(data.all.l)
-}
-
-# The preference function
-theta_p <- function(theta_a,theta_h,theta_q){
-  
-  theta_hq <- (theta_h + theta_q)/2
-  
-  H <- function(x){ # the Heaviside function
-    output <- rep(1,length(x))
-    output[x <= 0] <- 0
-    return(output)
-  }
-  
-  T.f <- function(x){
-    output <- atan(x - 1)
-    return(output)
-  }
-  
-  output <- (1 - theta_a) - 2/pi * T.f(theta_hq) *
-    ((1 - theta_a) * H(T.f(theta_hq)) + theta_a * H(-T.f(theta_hq)))
-  
-  return(output)
 }
 
 # Quantification of crop total yield (NOT USED)
@@ -1992,7 +1965,7 @@ crop.yield.fun <- function(data.ts,convert.to.day=F,parameters,modif.tot.amount=
   # total crop yield in g
   if(modif.tot.amount){
     # CY <- w_f*PS/n_f * fruit.set # in g
-    CY <- w_f*PS * fruit.set # in g
+    CY <- w_f * PS * fruit.set # in g
     
     CY.notCorrected <- w_f*PS.notCorrected/n_f
   }else{
@@ -2098,7 +2071,7 @@ crop.yield.fun <- function(data.ts,convert.to.day=F,parameters,modif.tot.amount=
 # 
 # y.max <- max.nb.flowers
 # x <- x.h.bloom
-# x.prop.half.y.max <- 1/2 # t get te x correspnding to 1/2 max.y
+# x.prop.half.y.max <- 1/2 # to get the x corresponding to 1/2 max.y
 saturation.logistic.fun <- function(y.max,x,x.prop.half.y.max){
   
   growthRate <- -log(1/3)/(x.prop.half.y.max * (max(x) - min(x)))
@@ -2277,18 +2250,13 @@ figure3.fun <- function(list.datasets,parameters,print = F,nameFile=NA,wd_figure
     lines(x = ds.here$days, y = ds.here[,variables[3]], lwd = lwd, col = col.lines[3],
           lty = lty.lines[3])
   }
-  # lines(x = ds.here$days, y = ds.here[,variables[4]], lwd = 2, col = col.lines[4],
-  #       lty = lty.lines[4])
-  #
+
   if(legend.box){
     bty.legend <- "o"
   }else{
     bty.legend <- "n"
   }
   
-  # if(Tw %in% c("J","mMJ")){
-  #   position.legend <- "topleft"
-  # }
   if(Tw %in% c("ApJ","ApJ.c.w","calibration") & legend.box){
     bty.legend <- "o"
   }
@@ -2646,7 +2614,29 @@ figure3.fun <- function(list.datasets,parameters,print = F,nameFile=NA,wd_figure
 }
 
 
-# The preference function
+# The preference function NOT USED
+theta_p <- function(theta_a,theta_h,theta_q){
+  
+  theta_hq <- (theta_h + theta_q)/2
+  
+  H <- function(x){ # the Heaviside function
+    output <- rep(1,length(x))
+    output[x <= 0] <- 0
+    return(output)
+  }
+  
+  T.f <- function(x){
+    output <- atan(x - 1)
+    return(output)
+  }
+  
+  output <- (1 - theta_a) - 2/pi * T.f(theta_hq) *
+    ((1 - theta_a) * H(T.f(theta_hq)) + theta_a * H(-T.f(theta_hq)))
+  
+  return(output)
+}
+
+# The preference function (Section 2.1.2)
 # S.noCF.prop : the proportion of bees scouting in the crop field when not in bloom
 theta_p.fun <- function(theta_a,theta_h,theta_q,Ti.c=NA,Ti.w=NA,t=NA,
                         S.noCF.prop = 0.1, parameters = NA){
@@ -2691,7 +2681,8 @@ theta_p.fun <- function(theta_a,theta_h,theta_q,Ti.c=NA,Ti.w=NA,t=NA,
   return(output)
 }
 
-# Function that return the parameters of the ODE model it their original unites
+# Function that return the parameters of the ODE model in their original unites
+# (Table 2)
 parameters.fun <- function(){
   
   para.orig<-list(theta_a = 0.1, 
@@ -2705,48 +2696,48 @@ parameters.fun <- function(){
                   A = 1.77*10^4,         # size of the circular field in m2
                   K_UWn = 25,            # switch rate from U to Wn in h-1
                   K_WnS = 1.7,           # switch rate from Wn to S in h-1
-                  K_BWn = 1/21/12, # 4.0*10^-3, # 2.69*10^-3,    # switch rate from B to Wn in h-1
+                  K_BWn = 1/21/12, #     # switch rate from B to Wn in h-1
                   K_HU = 3,              # switch rate from H to U in h-1
                   K_SH = 20,             # switch rate from S to H in h-1
-                  rho_B = 0.79, # 0.38, # 0.32,  # birth rate of brood in brood.h-1
-                  rho_c = 330, # 264,    # crop resource production rate in mg.m-2.h-1      
-                  rho_w = 40, # 8,       # WF resource production rate in mg.m-2.h-1        
+                  rho_B = 0.79,          # birth rate of brood in brood.h-1
+                  rho_c = 330,           # crop resource production rate in mg.m-2.h-1      
+                  rho_w = 40,            # WF resource production rate in mg.m-2.h-1        
                   delta_H = 3*10^-3,     # death rate of H in h-1
                   delta_S = 3*10^-3,     # death rate of S in h-1
                   delta_U = 3*10^-3,     # death rate of U in h-1
                   delta_Wn = 1.5*10^-3,  # death rate of Wn in h-1
-                  delta_B = 0.004, # 0.08, #0.004, # 1.6*10^-2,   # death rate of B in h-1
-                  delta_Rn = 0.01, # 0.131*10^-3,      # augmented death rate of broods in h-1           TO CALIBRATE
-                  delta_c = 0.02,     # decay rate of crop in h-1.flower-1
-                  delta_w = 0.02,     # decay rate of WF in h-1.flower-1
+                  delta_B = 0.004,       # death rate of B in h-1
+                  delta_Rn = 0.01,       # augmented death rate of broods in h-1           TO CALIBRATE
+                  delta_c = 0.02,        # decay rate of crop in h-1.flower-1
+                  delta_w = 0.02,        # decay rate of WF in h-1.flower-1
                   sigma_Wnc = 8.3,       # consumption rate of Rnc by Wn in mg.bee-1.h-1    
                   sigma_Wnw = 8.3,       # consumption rate of Rnw by Wn in mg.bee-1.h-1     
-                  sigma_Bc = 1.3, # 0.9,        # consumption rate of Rnc by B in mg.brood-1.h-1    
-                  sigma_Bw = 1.3, # 0.9,        # consumption rate of Rnc by Wn in mg.brood-1.h-1   
-                  # K_nc = 3.5*10^3, # 0.5,     # half saturation of Rnc in g                      TO CALIBRATE
-                  # K_nw = 0.5*10^3, # 3.5,     # half saturation of Rnw in g                      TO CALIBRATE
+                  sigma_Bc = 1.3,        # consumption rate of Rnc by B in mg.brood-1.h-1    
+                  sigma_Bw = 1.3,        # consumption rate of Rnc by Wn in mg.brood-1.h-1   
+                  # K_nc = 3.5*10^3,     # half saturation of Rnc in g                      TO CALIBRATE NOT USE
+                  # K_nw = 0.5*10^3,     # half saturation of Rnw in g                      TO CALIBRATE NOT USED
                   K_WnSnf = 10,
                   K_WnBnf = 10,
-                  # K_c = 12*10^3, # 2          # half saturation of Rc in g.m-2                   TO CALIBRATE
-                  # K_w = 2*10^3, # 0.5         # half saturation of Rw in g.m-2                   TO CALIBRATE
+                  # K_c = 12*10^3,       # half saturation of Rc in g.m-2                   TO CALIBRATE NOT USED
+                  # K_w = 2*10^3,        # half saturation of Rw in g.m-2                   TO CALIBRATE NOT USED
                   K_HUf = 10,
                   K_WnSf = 10,
                   K_SHf = 10,             # was K_f before;  TO CALIBRATE
-                  K_n = 10,              # ??? TO CALIBRATE
-                  # K_B = 10, # 160,             # half saturation of B in brood                    TO CALIBRATE
+                  K_n = 10,               # constant moderating the death rate of Wn and B  TO CALIBRATE
+                  # K_B = 10, # 160,      # half saturation of B in brood                   TO CALIBRATE  NOT USED
                   K_Bnf = 1,            # half saturation that reduces the production rate of broods as a function of Rn TO CALIBRATE
-                  epsilon = 0.01 ) # 10^-6)       # density of resources in weeds in g.m-2
+                  epsilon = 0.01 )      # density of resources in weeds in g.m-2
   return(para.orig)
 }
 
-# state variable and initial values
+# state variable and initial values (Table 1)
 state <- c(B = 50,
            Hc = 0,
            Hw = 0,
            Rc = 0.0,    # in g.m-2
-           Rw = 0,    # in g.m-2
-           Rnc = 0, # in g
-           Rnw = 5, # 0.5*1, # in g
+           Rw = 0,      # in g.m-2
+           Rnc = 0,     # in g
+           Rnw = 5,     # 0.5*1, # in g
            S = 0,
            Uc = 0,
            Uw = 0,
@@ -2761,6 +2752,7 @@ rm(col.n)
 
 # Function that takes a list of the parameter values and returns a data frame with
 # +/- range.percent values for each parameter
+
 # range.percent <- 10
 # para.l <- parameters.GSA
 para.range.fun <- function(para.l,range.percent = 10,return.data.frame = T){
@@ -2807,16 +2799,11 @@ para.conversion.fun <- function(parameters,mg.to.g=T,h.to.d=T){
   return(parameters)
 }
 
-
-# Function that represents the ODE model
+# Function that represents the ODE model (Section 2.1)
 # t <- seq(0,70*12, by = 0.01) # time in h
 # state # a vector of the initial values for each variable
 # parameters <- para.conversion.fun(parameters = para.orig,mg.to.g = T, h.to.d = F) # list of the parameters and their value
 ODE.m <- function(t,state,parameters){
-  
-  # theta_p <- theta_p.fun(theta_a = parameters[["theta_a"]],
-  #                        theta_h = parameters[["theta_h"]],
-  #                        theta_q = parameters[["theta_q"]])
   
   # Function that returns the time interval of the wildflower blooming season (Ti)
   Ti.fun <- function(parameters,in.h = T,Ti.w.correction = 0){
@@ -2873,9 +2860,7 @@ ODE.m <- function(t,state,parameters){
   
   # 
   Xi.fun <- function(t,Ti,percent.max = NA,blooming.time = T){
-    # output <- rep(0,length(t))
-    # output[t >= Ti[1] & t <= Ti[2]] <- 1
-    # print(t)
+
     output <- 0
     
     if(blooming.time){
@@ -2934,29 +2919,11 @@ ODE.m <- function(t,state,parameters){
     return(output)
   }
   
-  # Ti <- Ti.fun(parameters,in.h = T)
-  # Ti.c <- Ti["Ti.c"]
-  # Ti.w <- Ti["Ti.w"]
-  
   Ti.c <- Ti.fun(parameters,in.h = T)[["Ti.c"]]
   Ti.w <- Ti.fun(parameters,in.h = T,Ti.w.correction = 4)[["Ti.w"]]
   
-  # rho_c.hat <- parameters[["rho_c"]]*10^-3*Xc.fun(t) # 10^-3 to convert rho_c in g
-  # rho_w.hat <- parameters[["rho_w"]]*10^-3*(parameters[["epsilon"]] + Xw.fun(t,Ti)) # same as above
-  
-  # rho_c.hat <- parameters[["rho_c"]]*Xc.fun(t) # 
-  # rho_w.hat <- parameters[["rho_w"]]*(parameters[["epsilon"]] + Xw.fun(t,Ti)) # same as above
-  
-  # convert the sigma_ in g.bee-1.h-1
-  # sigma_Wnc.g <- parameters[["sigma_Wnc"]]
-  # sigma_Wnw.g <- parameters[["sigma_Wnw"]]
-  # sigma_Bc.g <- parameters[["sigma_Bc"]]
-  # sigma_Bw.g <- parameters[["sigma_Bw"]]
-  
   with(as.list(c(state,parameters)),{
 
-    # rho_c.hat <- Xc(t)*rho_c
-    # rho_w.hat <- (Xw(t) + epsilon)*rho_w
     percent.max <- NA
     Xc.t <- Xi.fun(t,Ti.c,percent.max = percent.max)
     Xw.t <- Xi.fun(t,Ti.w,percent.max = percent.max)
@@ -2966,110 +2933,51 @@ ODE.m <- function(t,state,parameters){
 
     theta_p <- theta_p.fun(theta_a = theta_a, theta_h = theta_h, theta_q = theta_q,
                            Ti.c = Ti.c,Ti.w = Ti.w,t = t,S.noCF.prop = 0)
-    # theta_p <- theta_p.fun(theta_a = theta_a, theta_h = theta_h, theta_q = theta_q)
     
-    # Eq. 2.8
+    # Eq. 2.9
     dB <- rho_B*(Rnc+Rnw)/(Rnc+Rnw+K_Bnf) - K_BWn*B - (delta_B + delta_Rn/(1+(Rnc+theta_q*Rnw)/K_n))*B
-    # previous version with the reduction the brood production rate as a function of Rn
-    # dB <- rho_B - K_BWn*B - (delta_B + delta_Rn/(1+(Rnc+theta_q*Rnw)/K_n))*B
-    # Bruno's modification:
-    # dB <- rho_B*0.95 - K_BWn*B - theta_Rn/(1+(Rnc+theta_q*Rnw)/K_n)*B
-
-    # previous version with  K_nc + K_nw vs. K_n :
-    # dB <- rho_B - K_BWn*B - (delta_B + theta_Rn/(1+(Rnc+theta_q*Rnw)/(K_nc + K_nf)))*B
     
-    # eq. 2.4
+    # eq. 2.5
     dHc <- K_SH*theta_p*Rc / (theta_p*Rc+(1-theta_p)*Rw + K_SHf) * S -
            K_HU*Rc/(Rc+K_HUf)*Hc - delta_H*Hc
-    # previous version with  K_c & K_w vs. K_HUf
-    # dHc <- K_SH*theta_p*Rc / (theta_p*Rc+(1-theta_p)*Rw + K_f) * S -
-    #        K_HU*Rc/(Rc+K_c)*Hc - delta_H*Hc
-    # previous version with  K_c + K_w vs. K_f :
-    # dHc <- K_SH*theta_p*Rc / (theta_p*Rc+(1-theta_p)*Rw + K_c + K_w) * S -
-    #        K_HU*Rc/(Rc+K_c)*Hc - delta_H*Hc
     
     dHw <- K_SH*(1-theta_p)*Rw / (theta_p*Rc+(1-theta_p)*Rw + K_SHf) * S -
            theta_h*K_HU*Rw/(Rw+K_HUf)*Hw - delta_H*Hw
-    # previous version with  K_c & K_w vs. K_HUf
-    # dHw <- K_SH*(1-theta_p)*Rw / (theta_p*Rc+(1-theta_p)*Rw + K_f) * S -
-    #        theta_h*K_HU*Rw/(Rw+K_w)*Hw - delta_H*Hw
-    # previous version with  K_c + K_w vs. K_f :
-    # dHw <- K_SH*(1-theta_p)*Rw / (theta_p*Rc+(1-theta_p)*Rw + K_c + K_w) * S -
-    #        theta_h*K_HU*Rw/(Rw+K_w)*Hw - delta_H*Hw
     
-    # Eq. 2.10
+    # Eq. 2.11
     dRc <- Xc.t*rho_c - eta/((1-theta_a)*A)*K_HU*Rc/(Rc+K_HUf)*Hc - (delta_c + Xc.t.postBloom)*Rc
     
-    # dRc <- Xc.t*rho_c - eta/((1-theta_a)*A)*K_HU*Rc/(Rc+K_HUf)*Hc - delta_c*Rc
-    # previous version with K_c and K_w vs. KHUf
-    # dRc <- Xc.t*rho_c - eta/((1-theta_a)*A)*K_HU*Rc/(Rc+K_c)*Hc - delta_c*Rc
-    # option to include (1-theta_a):
-    # dRc <- Xc.t*rho_c *(1-theta_a) - eta/((1-theta_a)*A)*K_HU*Rc/(Rc+K_c)*Hc - delta_c*Rc
-
-    # dRw <- (Xw.t + epsilon)*rho_w - eta/(theta_a*A)*K_HU*theta_h*Rw/(Rw+K_HUf)*Hw - (delta_w + Xw.t.postBloom)*Rw
-    
     dRw <- (Xw.t + epsilon)*rho_w - eta/(theta_a*A)*K_HU*theta_h*Rw/(Rw+K_HUf)*Hw - delta_w*Rw
-    # previous version with K_c and K_w vs. KHUf
-    # dRw <- (Xw.t + epsilon)*rho_w - eta/(theta_a*A)*K_HU*theta_h*Rw/(Rw+K_w)*Hw - delta_w*Rw
-    # option to include theta_a:
-    # dRw <- (Xw.t + epsilon)*rho_w*theta_a - eta/(theta_a*A)*K_HU*theta_h*Rw/(Rw+K_w)*Hw - delta_w*Rw
     
-    # Eq. 2.9
+    # Eq. 2.10
     dRnc <- eta*K_UWn*Uc - sigma_Wnc*Rnc/(Rnc+K_WnBnf)*Wn - sigma_Bc*Rnc/(Rnc+K_WnBnf)*B
-    # previous version with K_nc and K_nw vs. K_WnBnf
-    # dRnc <- eta*K_UWn*Uc - sigma_Wnc*Rnc/(Rnc+K_nc)*Wn - sigma_Bc*Rnc/(Rnc+K_nc)*B
     
     dRnw <- eta*K_UWn*Uw - sigma_Wnw*Rnw/(Rnw+K_WnBnf)*Wn - sigma_Bw*Rnw/(Rnw+K_WnBnf)*B
-    # previous version with K_nc and K_nw vs. K_WnBnf
-    # dRnw <- eta*K_UWn*Uw - sigma_Wnw*Rnw/(Rnw+K_nw)*Wn - sigma_Bw*Rnw/(Rnw+K_nw)*B
     
-    # Eq. 2.5
+    # Eq. 2.6
     dS <- K_WnS*(
           theta_p*Rc/((Rc+K_WnSf)*(1+Rnc/K_WnSnf)) + (1-theta_p)*Rw/((Rw+K_WnSf)*(1+Rnw/K_WnSnf))
           )*Wn -
           K_SH*(theta_p*Rc+(1-theta_p)*Rw)/(theta_p*Rc+(1-theta_p)*Rw + K_SHf)*S -
           delta_S*S
-    # previous version with K_c and K_w vs. K_WnSf AND K_nc and K_nw vs. K_WnSnf
-    # dS <- K_WnS*(
-    #        theta_p*Rc/((Rc+K_c)*(1+Rnc/K_nc)) + (1-theta_p)*Rw/((Rw+K_w)*(1+Rnw/K_nw))
-    #        )*Wn -
-    #        K_SH*(theta_p*Rc+(1-theta_p)*Rw)/(theta_p*Rc+(1-theta_p)*Rw + K_f)*S -
-    #        delta_S*S
-    # previous version with theta vs. thetap - 1 (and vice versa) and K_c + K_w vs. K_f
-    # dS <- K_WnS*(
-    #       (1-theta_a)*Rc/((Rc+K_c)*(1+Rnc/K_nc)) + theta_a*Rw/((Rw+K_w)*(1+Rnw/K_nw))
-    #       )*Wn -
-    #       K_SH*(theta_p*Rc+(1-theta_p)*Rw)/(theta_p*Rc+(1-theta_p)*Rw + K_c + K_w)*S -
-    #       delta_S*S
-    
-    # Eq; 2.6
-    dUc <- K_HU*Rc/(Rc+K_HUf)*Hc - K_UWn*Uc - delta_U*Uc
-    # previous version with  K_c & K_w vs. K_HUf
-    # dUc <- K_HU*Rc/(Rc+K_c)*Hc - K_UWn*Uc - delta_U*Uc
-    
-    dUw <- theta_h*K_HU*Rw/(Rw+K_HUf)*Hw - K_UWn*Uw - delta_U*Uw
-    # previous version with  K_c & K_w vs. K_HUf
-    # dUw <- theta_h*K_HU*Rw/(Rw+K_w)*Hw - K_UWn*Uw - delta_U*Uw
     
     # Eq. 2.7
+    dUc <- K_HU*Rc/(Rc+K_HUf)*Hc - K_UWn*Uc - delta_U*Uc
+    
+    dUw <- theta_h*K_HU*Rw/(Rw+K_HUf)*Hw - K_UWn*Uw - delta_U*Uw
+    
+    # Eq. 2.8
     dWn <- K_BWn*B + K_UWn*(Uc+Uw) - (delta_Wn + delta_Rn/(1+(Rnc+theta_q*Rnw)/K_n))*Wn - 
            K_WnS*
       (theta_p*Rc/((Rc+K_WnSf)*(1+Rnc/K_WnSnf)) + 
          (1-theta_p)*Rw/((Rw+K_WnSf)*(1+Rnw/K_WnSnf)))*Wn
-    # previous version with with K_c and K_w vs. K_WnSf AND K_nc and K_nw vs. K_WnSnf AND with the extra mortality due to low Rn
-    
-    # dWn <- K_BWn*B + K_UWn*(Uc+Uw) - delta_Wn*Wn - 
-    #        K_WnS*(theta_p*Rc/((Rc+K_c)*(1+Rnc/K_nc)) + (1-theta_p)*Rw/((Rw+K_w)*(1+Rnw/K_nw)))*Wn
-    # previous version with theta vs. thetap - 1 (and vice versa) 
-    # dWn <- K_BWn*B + K_UWn*(Uc+Uw) - delta_Wn*Wn - 
-    #        K_WnS*((1-theta_a)*Rc/((Rc+K_c)*(1+Rnc/K_nc)) + theta_a*Rw/((Rw+K_w)*(1+Rnw/K_nw)))*Wn
     
     # return the rate of change
     list(c(dB,dHc,dHw,dRc,dRw,dRnc,dRnw,dS,dUc,dUw,dWn))
   })
 }
 
-# Not sure what this function is for. It is not used anywhere.
+# NOT USED
 ODE.m.Rc <- function(t,state,parameters){
   
   # theta_p <- theta_p.fun(theta_a = parameters[["theta_a"]],
@@ -3217,7 +3125,7 @@ ODE.m.Rc <- function(t,state,parameters){
   })
 }
 
-# Calculate the euclidean distance between two vectors
+# Function that calculates the euclidean distance between two vectors
 euclidian.dist.fun <- function(x=c(),y=c()){
   if(length(x) != length(y)){
     print("vectors have different length")
@@ -3228,13 +3136,15 @@ euclidian.dist.fun <- function(x=c(),y=c()){
 }
 
 # The loss function used to calibrate the model; it calculates the euclidean distance between
-# the vectors of aimed and simulated values.
+# the vectors of aimed and simulated values (Section 2.3.2).
+
 # output.ODE <- out # a data frame of the out put of the ODE, with colnames being the names of the variables
 # var.goal <- var.goal[[1]]      # a vector of the values of the variable to consider, with nale being the name of the variables
 loss.fun <- function(output.ODE,var.goal = NA){
   
   if(is.na(var.goal)[1]){ # for the switch point only --> not used
     
+    # Section 2.3.1
     var.goal <- data.frame(day = c(23,33,43,53),
                            Wn = c(23,NA,NA,NA),
                            S = c(2,NA,NA,NA),
@@ -3242,9 +3152,7 @@ loss.fun <- function(output.ODE,var.goal = NA){
                            Ucw = c(2,NA,NA,NA),
                            W.tot = c(40,10,10,NA),
                            B = c(114,20,20,48))
-    # var.goal <- c(23,13,2,2,114)
-    # # 40 workers at the switch point (time = 23 day), from Duchateau and Velthuis 1988 
-    # names(var.goal) <- c("Wn","Hcw","S","Ucw","B")
+
   }
   
   col.here <- c("B","Hc","Hw","Uc","Uw","Wn","S")
@@ -3256,16 +3164,11 @@ loss.fun <- function(output.ODE,var.goal = NA){
   
   # 
   var.day.l <- list()
-  # var.day.l[[1]] <- c("Wn","S","Hcw","Ucw","W.tot","B")
+  
   for(i in 1:nrow(var.goal)){
     var.day.l[[i]] <- colnames(var.goal)[c(F,!is.na(var.goal[i,2:ncol(var.goal)]))]
   }
   names(var.day.l) <- var.goal$day
-  
-  # var.day.l[[2]] <- c("W.tot","B")
-  # var.day.l[[3]] <- c("W.tot","B")
-  # var.day.l[[4]] <- c("B")
-  # names(var.day.l) <- c(23,33,43,53)
   
   var.goal.c <- NA
   var.got.c <- NA
@@ -3291,10 +3194,10 @@ loss.fun <- function(output.ODE,var.goal = NA){
   return(distance)
 }
 
-# Function that returns that expected values of the different population
+# Function that returns the expected values of the different population
 # at different times and the ones obtained with the calibrated parameters.
-# It also returns the euclidian distance.
-# TO UPDATE
+# It also returns the Euclidean distance.
+# NOT USED
 var.gaol.comparison.fun <- function(output,var.goal = NA,print.csv=F,wd){
   
   if(is.na(var.goal)){
@@ -3324,8 +3227,9 @@ var.gaol.comparison.fun <- function(output,var.goal = NA,print.csv=F,wd){
   return(var.goal)
 }
 
-# Function that sample data points in a parameter space whose boundaries are 
-# defined by a list of ranges of parameters.
+# Function that performs Latin Hypercube Sampling data points in a parameter space 
+# whose boundaries are defined by a list of ranges of parameters.
+# Used in model calibration and GSA.
 # n <- n.pt.loop # the number of points to select
 # range.val.l <- ranges.calib.l # the list of range of value for each parameters
 LHS.fun <- function(range.val.l,n){
@@ -3343,7 +3247,7 @@ LHS.fun <- function(range.val.l,n){
   return(lh)
 }
 
-# Function that conduct the calibration procedure, doing to following steps:
+# Function that conducts the calibration procedure, doing to following steps (Section 2.3.3):
 # 1) run the simulation with the values contained in 'parameters'
 # 2) generate and run the 'n.pt.init' simulation by sampling points in the parameter
 # space defined using the intervals in 'ranges.calib.l' and LHC sampling.
@@ -3355,6 +3259,7 @@ LHS.fun <- function(range.val.l,n){
 # number of the loop. 
 # 4) is repeated 'n.loop' times.
 # The weight for two scenarios = sqrt(nb obj in scenario with highest # obj / nb obj in scenario with lowest # obj)
+
 # var.goal <- NA      # a vector of the values of the variable to consider, with nale being the name of the variables
 # thetas.calibration <- NA # the value
 # t <- seq(0,70*12, by = 0.01) # time in h
@@ -3368,7 +3273,6 @@ LHS.fun <- function(range.val.l,n){
 # wd <- wd_data
 # name.csv <- "calibration.lossFun.csv"
 # parallel <- F
-# weight.weeds.vs.calib <- 1 # NOT USED ANYMORE to weight the distance of the "weeds.only" scenario relatively to the distance of the "calibration" scenario
 ODE.calibration.fun <- function(t = seq(0,70*12, by = 0.01),state,
                                 var.goal=NA,thetas.calibration=NA,
                                 ranges.calib.l,n.pt.init = 100, n.pt.selected.loop = 10, 
@@ -3493,10 +3397,6 @@ ODE.calibration.fun <- function(t = seq(0,70*12, by = 0.01),state,
   
   print(paste(round(nrow(para.dist.df)/tot.nb.row*100,1),"% ; min.distance =",min.dist,sep=" "))
   
-  # if(write.file){
-  #   write.csv(para.dist.df,paste(wd,name.csv,sep="/"),row.names = F)
-  # }
-  
   # add new parameter points
   for(i in 1:n.loop){
     
@@ -3549,10 +3449,6 @@ ODE.calibration.fun <- function(t = seq(0,70*12, by = 0.01),state,
     min.dist <- round(min(para.dist.df$distance),2)
     
     print(paste(round(nrow(para.dist.df)/tot.nb.row*100,1),"% ; min.distance =",min.dist,sep=" "))
-    
-    # if(write.file){
-    #   write.csv(para.dist.df,paste(wd,name.csv,sep="/"),row.names = F)
-    # }
     
     # update para.dist.df.best
     para.dist.df.best <- para.dist.df[order(para.dist.df$distance),]
@@ -3607,10 +3503,6 @@ ODE.calibration.fun <- function(t = seq(0,70*12, by = 0.01),state,
     
     print(paste(round(nrow(para.dist.df)/tot.nb.row*100,1),"% ; min.distance =",min.dist,sep=" "))
     
-    # if(write.file){
-    #   write.csv(para.dist.df,paste(wd,name.csv,sep="/"),row.names = F)
-    # }
-    
     # update para.dist.df.best
     para.dist.df.best <- para.dist.df[order(para.dist.df$distance),]
     para.dist.df.best <- para.dist.df.best[1:n.pt.selected.loop,]
@@ -3646,11 +3538,6 @@ ODE.calibration.fun <- function(t = seq(0,70*12, by = 0.01),state,
       lh <- LHS.fun(ranges.calib.l.new,n.pt.generated.loop)
       
       # Run the corresponding simulations
-      ## get parameter list
-      # para.orig <- parameters.fun()
-      # para <- parameters
-      # para <- para.conversion.fun(para.orig,mg.to.g = T,h.to.d = F)
-      
       if(parallel){
         s <- mclapply(X = 1:nrow(lh), FUN = ODE.change.para.fun, DF = lh, para = para,
                       name.para.change = name.para.change, 
@@ -3674,9 +3561,6 @@ ODE.calibration.fun <- function(t = seq(0,70*12, by = 0.01),state,
       
       print(paste(round(nrow(para.dist.df)/tot.nb.row*100,1),"% ; min.distance =",min.dist,sep=" "))
       
-      # if(write.file){
-      #   write.csv(para.dist.df,paste(wd,name.csv,sep="/"),row.names = F)
-      # }
     }
   }
   
@@ -3685,15 +3569,18 @@ ODE.calibration.fun <- function(t = seq(0,70*12, by = 0.01),state,
     name.csv <- paste("calibration.lossFun_",date.time,"_Dist_",min.dist,".csv",sep="")
     name.csv <- gsub(":","-",name.csv)
     name.csv <- gsub(" ","_",name.csv)
-    
+  }
+  
+  if(write.file){
     write.csv(para.dist.df,paste(wd,name.csv,sep="/"),row.names = F)
   }
+  
   return(para.dist.df)
 }
 
-# Function that take a dataframe of parameter values and measure of distance
+# Function that takes a data frame of parameter values and measure of distance
 # and generates mid-distance parameter points for each pair of parameter points
-# in the dataset.
+# in the dataset (for model calibration).
 # para.dist.DS <- para.dist.df.best
 paraPt.midDist.fun <- function(para.dist.DS,name.para.change=NA){
   
@@ -3718,8 +3605,9 @@ paraPt.midDist.fun <- function(para.dist.DS,name.para.change=NA){
   return(output)
 }
 
-# Function to run using lapply, parallel::mclapply or parallel::parLapply
-# # It is used in ODE.calibration.fun() and experiment.fun()
+# Function to run model simulations using lapply, parallel::mclapply or parallel::parLapply
+# It is used in ODE.calibration.fun() and experiment.fun().
+
 # x <- 1
 # DF <- output.exp
 # DF <- lh
@@ -3729,7 +3617,6 @@ paraPt.midDist.fun <- function(para.dist.DS,name.para.change=NA){
 # var.goal <- NA
 # t <- seq(0,61*12, by = 0.01)
 # calc.dist <- F
-# weight.weeds.vs.calib <- 1
 ODE.change.para.fun <- function(x,DF,para,name.para.change,
                                 var.goal = NA, thetas.calibration = NA,
                                 t,state,
@@ -3742,10 +3629,7 @@ ODE.change.para.fun <- function(x,DF,para,name.para.change,
   para[name.para.change] <- pt.here[,name.para.change]
   #
   if(calc.dist){ # for the model calibration
-    # run ODE model
-    # if(class(var.goal) == "data.frame"){
-    #   var.goal <- list(var.goal)
-    # }
+
     # run simulations for each scenario in var.goal
     s <- lapply(X = 1:length(var.goal), function(X){
       scenarioHere <- names(var.goal)[X]
@@ -3834,9 +3718,10 @@ ODE.change.para.fun <- function(x,DF,para,name.para.change,
   # return(list(new.row))
 }
 
-# Function that that generate one simulation for each combination of the values 
-# of the parameters theta_a, theta_hq and Tw.
-# A data frame is returned with the crop yeild in kg/ha or kg
+# Function that generates one simulation for each combination of the values 
+# of the parameters theta_a, theta_hq and Tw (for the experiment; Section 2.4).
+# A data frame is returned with the crop yield in kg/ha or kg
+
 # t.h <- t <- seq(0,61*12, by = 0.01)
 # theta_a <- c(0.1) # seq(0.02,0.4,0.02)
 # theta_h <- theta_q <- c(1) # seq(0.1,6.0,0.1)
@@ -3883,36 +3768,15 @@ experiment.fun <- function(ODE.m,theta_a,theta_h,theta_q,parameters,t.h,print.cs
   new.rows <- do.call(rbind.data.frame,s)
   new.rows$last_day <- max(t.h)/12
   
-  # output.exp$yield_kg.ha.last.d <- new.rows$yield_kg.ha.last.d
-  
-  # for(i in 1:nrow(output.exp)){
-  #   print(paste("Simulations done:",round(i/nrow(output.exp)*100,1),"%",sep=" "))
-  #   para[paraToChange] <- output.exp[i,paraToChange]
-  #   out <- NULL
-  #   while(is.null(out) | sum(class(out) != "try-error") == 0){
-  #     out <- try(ode(y = state, times = t.h, func = ODE.m, parms = para))
-  #   }
-  #   out.2 <- as.data.frame(out)
-  #   out.2[,1] <- out.2[,1] / 12 # conversion in days
-  #   out.2 <- out.2[out.2[,1] %in% 0:90,]
-  #   # figure3.fun(out.2, parameters = para, print = F,wd_figures = wd_figures)
-  #   
-  #   CY <- crop.yield.fun(data.ts = out.2, parameters = para, convert.to.day = F) # in g for the total area
-  #   CY <- CY / 1000       # g --> kg for the total area
-  #   CY <- CY * 10000 / parameters$A # kg for total area --> kg/ha
-  #   out.2$CY <- CY
-  #   output.exp[i,]$yield_kg.ha.last.d <- out.2$CY[out.2$time == 61]
-  #   
-  #   write.csv(output.exp,paste(wd_data_raw,"output.experiment.csv",sep="/"),row.names = F)
-  # }
   if(print.csv){
     write.csv(new.rows,paste(wd_data_raw,name.csv,sep="/"),row.names = F)
   }
   return(new.rows)
 }
 
-# Function that conduct a global sensitivity analysis using the Latin Hypercube
+# Function that conducts a global sensitivity analysis using the Latin Hypercube
 # # Sampling and Partial423Rank Correlation Coefficient (LHS-PRCC).
+
 # parameters.l <- parameters
 # nb.para.pts <- 10
 # range.percent <- 50
@@ -4010,17 +3874,9 @@ ODE.LHS.PRCC.GSA.fun <- function(ODE.m, t, state, parameters.l, name.para.GSA,
 }
 
 
-# Returns a list of two dataframes, one for each of the scenarios in the calibration, 
+# Returns a list of two data frames, one for each of the scenarios in the calibration, 
 # with the expected population sizes (i.e., the targets).
 var.goal.fun <- function(){
-  
-  # var.goal <- data.frame(day = c(23,53,63),
-  #                        Wn = c(23,NA,NA),
-  #                        S = c(2,NA,NA),
-  #                        Hcw = c(13,NA,NA),
-  #                        Ucw = c(2,NA,NA),
-  #                        W.tot = c(NA,15,NA),
-  #                        B = c(114,15,43))
   
   # Case with two scenarios:
   var.goal <- data.frame(day = c(23,53,63),
@@ -4043,42 +3899,10 @@ var.goal.fun <- function(){
   names(var.goal) <- c(treatments.Tw$calibration,
                        treatments.Tw$weeds.only)
   
-  # case with three scenarios
-  # var.goal <- data.frame(day = c(23,53,63),
-  #                        Wn = c(NA,NA,NA),
-  #                        S = c(NA,NA,NA),
-  #                        Hcw = c(NA,NA,NA),
-  #                        Ucw = c(NA,NA,NA),
-  #                        W.tot = c(40,15,NA),
-  #                        B = c(114,15,43))
-  
-  # var.goal <- list(var.goal)
-  # var.goal[[2]] <-  data.frame(day = c(33,43,53),
-  #                              Wn = c(NA,NA,NA),
-  #                              S = c(NA,NA,NA),
-  #                              Hcw = c(NA,NA,NA),
-  #                              Ucw = c(NA,NA,NA),
-  #                              # W.tot = c(15,15,15),
-  #                              # B = c(15,15,15))
-  #                              W.tot = rep(20,3),
-  #                              B = rep(20,3))
-  # 
-  # var.goal[[3]] <-  data.frame(
-  #                              # day = c(33,43,53),
-  #                              day = c(23,53),
-  #                              Wn = c(NA,NA),
-  #                              S = c(NA,NA),
-  #                              Hcw = c(NA,NA),
-  #                              Ucw = c(NA,NA),
-  #                              W.tot = c(0,0),
-  #                              B = c(0,0))
-  # 
-  # names(var.goal) <- c(treatments.Tw$calibration,
-  #                      treatments.Tw$weeds.only,
-  #                      treatments.Tw$noResources)
   return(var.goal)
 }
 
+# Same as above but with four scenarios. NOT USED.
 var.goal.4scenarios.fun <- function(){
   
   # resourcesDiscontWF :
@@ -4156,7 +3980,7 @@ thetas.calibration.4scenarios.fun <- function(){
 }
 
 
-
+# THE END
 
 
 

@@ -1,6 +1,10 @@
+# Script related to Carturan et al. 2023. Bumble bee pollination and the 
+# wildflower/crop trade-off: When do wildflower enhancements improve crop yield?
+# Ecological Modelling
+
 # Author: Bruno S. Carturan
 
-# The goal of the script is to conduct the virtual experiment and produce the associated figures.
+# The goal of the script is to produce the figure related to the preference function (Figure 2)
 
 # Figures created:
 # Preference_function_theta_p.jpeg
@@ -27,8 +31,6 @@ par(mar=c(4.5,5,0.5,0.5))
 plot(0,0,xlim=c(0,6),ylim=c(0,1),col="white",las=1,xlab="",ylab="")
 mtext(bquote("Attractiveness" ~ theta[hq]~"="~(theta[h]+theta[q])/2),
       side = 1,line = 3)
-# mtext(bquote("Preference for crop vs. wildflowers ("~theta[p]~")"),
-#       side = 2,line = 3)
 mtext(bquote("Preference for crop vs. wildflowers ="~theta[p]*"("*theta[a]*","*theta[h]*","*theta[q]*")"),
       side = 2,line = 3)
 abline(a = 0.5, b = 0, lty =2, lwd = 2, col="gray")
@@ -53,10 +55,4 @@ if(print.fig){
   dev.off()
 }
 
-
-
-
-
-
-
-
+# THE END

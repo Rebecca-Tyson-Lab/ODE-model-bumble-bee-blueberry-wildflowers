@@ -1,3 +1,7 @@
+# Script related to Carturan et al. 2023. Bumble bee pollination and the 
+# wildflower/crop trade-off: When do wildflower enhancements improve crop yield?
+# Ecological Modelling
+
 # Author: Bruno S. Carturan
 
 # The goal of the script is to conduct the virtual experiment and produce the associated figures.
@@ -63,10 +67,8 @@ for(i in 1:length(As)){
                                suffix.name.csv = paste0("A=",As[i],"_",dist.here))
 }
 
-# file generated:
 
-
-# Figures contour lines -------
+# Figures contour lines (Figure 5, S4, S5) -------
 #
 t <- seq(0,61*12, by = 0.01)
 para.fileName <- "parameters.initial.dist.51.13.RData" # 
@@ -156,7 +158,7 @@ for(i in 1:ncol(As)){
 }
 
 #
-# Figure that combines the different accumulated flower visits ------
+# Figure that combines the different accumulated flower visits (Figure 8) ------
 #
 A.s <- c(600,300,900)
 Tw.s <- rep(treatments.Tw$Ap,length(A.s))
@@ -205,7 +207,7 @@ if(print.fig){
 }
 
 #
-# Figures population dynamics to compare effects of ApM vs. M and theta_hq = 2 vs. 5 -----
+# Figures population dynamics to compare effects of ApM vs. M and theta_hq = 2 vs. 5 (Figures 6, 7, S6) -----
 #
 
 y.max.H.Wn = 90
@@ -216,7 +218,7 @@ y.max.R = 15
 y.max.CY = 800 # 700
 
 As <- rep(600,3)
-Tws <- c("ApmM","M","M")
+Tws <- c("ApmM","M","M") # Figure 6, 7 and S6
 theta_as <- rep(0.1,3)
 theta_hqs <- c(2,2,5)
 
@@ -261,13 +263,10 @@ max(out.2.l[[1]]$CY)/1000 # 762.5 kg
 max(out.2.l[[2]]$CY)/1000 # 309.3
 max(out.2.l[[3]]$CY)/1000 # 222.7
 
-# Figure population dynamics control vs other treatment -----
-# why is there a reduction in the total number of bees in "May" and "2nd part of May" treatments?
-para.fileName <- "parameters.initial.dist.51.13.RData" # 
-parameters <- readRDS(file = paste(wd_data_raw,para.fileName,sep="/"))
+# Figure population dynamics control vs other treatment (extra, not published) -----
 
-y.max.H.U = 90
-y.max.Wn.S = 2
+y.max.H.Wn = 90
+y.max.U.S = 2
 y.max.B = 130 # 120
 y.max.Rn = 35
 y.max.R = 15
@@ -290,7 +289,7 @@ out.2[,1] <- out.2[,1] / 12 # conversion in days
 out.2 <- out.2[out.2[,1] %in% 0:90,]
 figure3.fun(out.2, parameters = parameters,y.max.R = y.max.R, print = print,
             wd_figures = wd_figures,total.yield = T,legend.box = T,legend.position = "topleft",
-            y.max.H.U = y.max.H.U, y.max.Wn.S = y.max.Wn.S, y.max.B = y.max.B, 
+            y.max.H.Wn = y.max.H.U, y.max.U.S = y.max.U.S, y.max.B = y.max.B, 
             y.max.Rn = y.max.Rn, y.max.CY = y.max.CY,
             nameFile = paste0("Figure.Experiment_dynamics_dist_A_",parameters$A,"_Tw_",
                               parameters$Tw,"_theta_a_",parameters$theta_a,"_theta_hq_",
@@ -309,15 +308,13 @@ out.2[,1] <- out.2[,1] / 12 # conversion in days
 out.2 <- out.2[out.2[,1] %in% 0:90,]
 figure3.fun(out.2, parameters = parameters, print = print,
             wd_figures = wd_figures,total.yield = T,legend.box = T,legend.position = "topleft",
-            y.max.H.U = y.max.H.U, y.max.Wn.S = y.max.Wn.S, y.max.B = y.max.B, 
+            y.max.H.Wn = y.max.H.U, y.max.U.S = y.max.U.S, y.max.B = y.max.B, 
             y.max.Rn = y.max.Rn, y.max.CY = y.max.CY,y.max.R = 15,
             nameFile = paste0("Figure.Experiment_dynamics_dist_A_",parameters$A,"_Tw_",
                               parameters$Tw,"_theta_a_",parameters$theta_a,"_theta_hq_",
                               parameters$theta_q,".jpeg"))
 #
-
-
-# Difference population size control vs. May with theta_hq = 1, 4, 6 and 10 ------
+# Difference population size control vs. May with theta_hq = 1, 4, 6 and 10 (Figure S7) ------
 
 para.fileName <- "parameters.initial.dist.51.13.RData" #
 parameters <- readRDS(file = paste(wd_data_raw,para.fileName,sep="/"))
@@ -375,4 +372,4 @@ if(print){
   dev.off()
 }
 
-#
+# THE END

@@ -1,3 +1,7 @@
+# Script related to Carturan et al. 2023. Bumble bee pollination and the 
+# wildflower/crop trade-off: When do wildflower enhancements improve crop yield?
+# Ecological Modelling
+
 # Author: Bruno S. Carturan
 
 # The goal of the script is to conduct the model sensitivity analysis to initial 
@@ -107,6 +111,7 @@ names(lty_lines) <- as.character(percent_change)
 var_order <- c("B","Wn","Rnw") # so the order can be changed easily
 plotResourcesPoly <- F
 
+# Figure S8 -----
 
 coeff <- 1.2
 if(print.fig){
@@ -236,5 +241,5 @@ if(print.fig){
 # nb  38.11 48.38 55.95 58.40
 #  "Base-line: 52.83"
 
-
+# THE END
 

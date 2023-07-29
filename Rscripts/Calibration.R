@@ -1,3 +1,7 @@
+# Script related to Carturan et al. 2023. Bumble bee pollination and the 
+# wildflower/crop trade-off: When do wildflower enhancements improve crop yield?
+# Ecological Modelling
+
 # Author: Bruno S. Carturan
 
 # The goal of the script is to conduct the calibration and produce the associated figures.
@@ -94,15 +98,9 @@ n.pt.generated.loop <- 30 # 10 # nb of points drawn around each selected point f
 n.loop <- 10 # nb of loops
 percent.range <- 20 # 10 # the % of the initial range from which new points are drawn (note that the range gets smaller because it is divided by the number of each loop, i.e., 1st, 2nd, 3rd, etc.)
 
-
-n.pt.init <- 2 # n.pt.init <- 2 # nb of initial points
-n.pt.selected.loop <- 1 # 10 # nb of points selected per loop
-n.pt.generated.loop <- 1 # 10 # nb of points drawn around each selected point for each loop
-n.loop <- 1 # 10 # nb of loops
-percent.range <- 20 # 10 # the % of the initial range from which new points are drawn (note that the range gets smaller because it is divided by the number of each loop, i.e., 1st, 2nd, 3rd, etc.)
-
-# time is take in hours
-(n.pt.init + n.loop * n.pt.selected.loop * n.pt.generated.loop + n.loop*n.pt.selected.loop + 1)*9/60/60 # 14 second per simulation
+# estimated time simulation take in hours (depends on the computer)
+time_oneSim_s <- 9
+(n.pt.init + n.loop * n.pt.selected.loop * n.pt.generated.loop + n.loop*n.pt.selected.loop + 1)*time_oneSim_s/60/60 
 
 numCores <- detectCores()
 
@@ -110,12 +108,14 @@ var.goal <- var.goal.fun()
 thetas.calibration <- thetas.calibration.fun()
 
 # if run an a linux machine set parallel = T
+# set write.file to TRUE to export .csv file
 DS <- ODE.calibration.fun(t = t, state = state, ranges.calib.l = ranges.calib.l,
                           percent.range = percent.range,n.pt.init = n.pt.init,
                           n.pt.selected.loop = n.pt.selected.loop,
                           var.goal = var.goal,thetas.calibration = thetas.calibration,
                           n.pt.generated.loop = n.pt.generated.loop,n.loop = n.loop,
-                          parameters = parameters, write.file = F, wd = wd_data,
+                          parameters = parameters, wd = wd_data,
+                          write.file = F,
                           parallel = F)
 
 # File exported: 
@@ -127,7 +127,6 @@ DS <- read.csv(paste(wd_data_raw,file.name,sep="/"),header = T)
 nrow(DS) # 16655
 min(DS$distance)
 max(DS$distance)
-
 
 # Figure showing the distance for all the parameter points generated (not published)------
 
@@ -148,6 +147,7 @@ if(print.fig){
 }
 #
 # Figure showing distances for each scenario for all points --------
+
 # Determine the weight to give to each scenario based on the number of target 
 # they have. The weight for the scenario with the largest number of targets is
 # = 1.
@@ -157,8 +157,7 @@ maxTargets <- max(nbTargets)
 weights.scenarios <- sqrt(maxTargets/nbTargets)
 
 DS.sort <- DS[order(DS$distance),]
-DS.here <- DS.sort # if we select the one with the minimum distance or 
-
+DS.here <- DS.sort # if we select the one with the minimum distance
 
 simulationSc <- c("calibration","weeds.only")
 layout(matrix(1:length(simulationSc), nrow = 1))
@@ -326,5 +325,5 @@ figure3.fun(out.2,parameters = parameters, print = print.fig,
             var.goal = var.goal, show.var.goal = T,legend.box = T, # y.max.R = y.max.R,
             nameFile = paste0("Figure.Calibration_",parameters$Tw,"_A=",parameters$A,"_Objectives_notSelected.jpeg"))
 
-
+# THE END
 
