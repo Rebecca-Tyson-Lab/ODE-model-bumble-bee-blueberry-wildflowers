@@ -1,4 +1,4 @@
-Script related to Carturan et al. 2023. Bumble bee pollination and the 
+Scripts related to Carturan et al. 2023. Bumble bee pollination and the 
 wildflower/crop trade-off: When do wildflower enhancements improve crop yield?
 Ecological Modelling
 
@@ -8,7 +8,7 @@ To reproduce the calibration, virtual experiment and GSA and the associated figu
 
 The scripts and datasets are available in [OSF](https://doi.org/10.17605/OSF.IO/6Z352.) and  [github](https://github.com/Rebecca-Tyson-Lab/ODE-model-bumble-bee-blueberry-wildflowers).
 
-Note the Figures folder is empty because we did not want to use memory unnecessarily. 
+Note the figures folder is empty because we did not want to use memory unnecessarily. 
 The figures can be reproduced easily by running the scripts.
 
 
