@@ -1,4 +1,4 @@
-Scripts related to Carturan et al. 2023. Bumble bee pollination and the 
+Scripts and datasets related to Carturan et al. 2023. Bumble bee pollination and the 
 wildflower/crop trade-off: When do wildflower enhancements improve crop yield?
 Ecological Modelling
 
